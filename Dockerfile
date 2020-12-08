@@ -1,19 +1,19 @@
 FROM node:12.18 AS base
 WORKDIR /app
 
-# -----Dependecies------
+# Dependecies
 FROM base AS dependecies
 COPY package*.json ./
 COPY tsconfig*.json ./
 RUN npm ci
 
-# -----Copy Files/Build------
+# Copy files
 FROM dependecies as build
 WORKDIR /app
 COPY /src ./src
 RUN npm run build
 
-# ---Realese with Alpine----
+# Alpine release
 FROM node:12.18-alpine
 WORKDIR /app
 COPY --from=dependecies /app/package*.json ./
